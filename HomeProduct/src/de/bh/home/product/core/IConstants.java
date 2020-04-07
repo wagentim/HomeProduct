@@ -19,5 +19,11 @@ public interface IConstants
 
 	// Application
 	public static final String TXT_APP_TITLE = "Home Product (V1.0)";
+	
+	// Constants Text
+	public static final String TXT_DEFAULT = "默认";
+	public static final String TXT_CATEGORY = "目录";
+	public static final String TXT_WEBSITE = "网站";
+	public static final String[] TXT_TABLE_HEADER = {"产品名称", "价格"};
 
 }

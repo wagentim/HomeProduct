@@ -26,4 +26,23 @@ public final class Utils
 		return gson.fromJson(jsonObject, Product.class);
 	}
 	
+	public static String siteNameMapping(final String input)
+	{
+		if(input.toLowerCase().equals("yachao"))
+		{
+			return "开元亚超";
+		}
+		else if(input.toLowerCase().equals("yachaoonline"))
+		{
+			return "亚超在线";
+		}
+		else if(input.toLowerCase().equals("goasia"))
+		{
+			return "东方行";
+		}
+		else
+		{
+			return "UNKNOWN";
+		}
+	}
 }

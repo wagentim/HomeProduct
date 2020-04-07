@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import de.bh.home.product.core.IConstants;
 import de.bh.home.product.core.Utils;
+import de.bh.home.product.entity.Setting;
 
 /**
  * Handle all Setting file related actions
@@ -31,21 +33,6 @@ public final class SettingFileHandler extends AbstractMessageSender
 	private final Gson gson;
 	private Setting setting = null;
 	
-	class Setting
-	{
-		private List<String> webSites;
-
-		public List<String> getWebSites()
-		{
-			return webSites;
-		}
-
-		public void setWebSites(List<String> webSites)
-		{
-			this.webSites = webSites;
-		}
-	}
-	
 	public SettingFileHandler()
 	{
 		this.gson = new GsonBuilder().setPrettyPrinting().create();
@@ -55,15 +42,33 @@ public final class SettingFileHandler extends AbstractMessageSender
 	{
         Path path = getSettingFilePath();
         
+        if(!Files.exists(path))
+        {
+        	logger.info("Create Setting File: " + path.toString());
+        	try
+			{
+				Files.createFile(path);
+				
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+        }
+        
 		try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8))
 		{
 
 			setting = gson.fromJson(reader, Setting.class);
+			
+			if(setting == null)
+			{
+				setting = new Setting();
+			}
 
 		} catch (IOException e)
 		{
 			//e.printStackTrace();
-			setting = null;
+			setting = new Setting();
 			logger.error("Error -> Loading Setting File: " + path.toString());
 		}
 	}
@@ -123,9 +128,8 @@ public final class SettingFileHandler extends AbstractMessageSender
 		
 	}
 
-	public void getWebSites()
+	public Setting getSetting()
 	{
-		// TODO Auto-generated method stub
-		
+		return setting;
 	}
 }
