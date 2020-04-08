@@ -1,4 +1,4 @@
-package de.bh.home.product.ui;
+package de.bh.home.product.ui.base;
 
 import java.text.SimpleDateFormat;
 
@@ -18,10 +18,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import de.bh.home.product.actions.ActionLoadData;
 import de.bh.home.product.core.IConstants;
 import de.bh.home.product.handler.IMessageListener;
 import de.bh.home.product.handler.MessageManager;
 import de.bh.home.product.handler.UIHandler;
+import de.bh.home.product.ui.tree.CategoryComposite;
 
 public class MainScreen implements IMessageListener
 {
@@ -137,23 +139,7 @@ public class MainScreen implements IMessageListener
 		loadToolItem = new ToolItem(bar, SWT.PUSH);
 		loadToolItem.setImage(controller.getImageProxy().getImage(IImageConstants.IMAGE_LOAD_OUTLINE));
 		loadToolItem.setHotImage(controller.getImageProxy().getImage(IImageConstants.IMAGE_LOAD_COLOR));
-		loadToolItem.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent arg0)
-			{
-				Runnable load = new Runnable() {
-
-					@Override
-					public void run()
-					{
-//						controller.loadAllData();
-					}
-				};
-				
-//				display.asyncExec(load);
-			}
-		});
+		loadToolItem.addSelectionListener(new ActionLoadData(controller));
 		
 		new ToolItem(bar, SWT.SEPARATOR);
 	}

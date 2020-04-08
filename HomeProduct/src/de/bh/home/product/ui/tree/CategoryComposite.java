@@ -1,4 +1,6 @@
-package de.bh.home.product.ui;
+package de.bh.home.product.ui.tree;
+
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -7,18 +9,26 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.TreeItem;
 
+import de.bh.home.product.actions.IActionConstants;
 import de.bh.home.product.core.IConstants;
+import de.bh.home.product.entity.AbstractTreeElement;
+import de.bh.home.product.entity.WebSiteElement;
+import de.bh.home.product.handler.IEvents;
+import de.bh.home.product.handler.MessageManager;
 import de.bh.home.product.handler.UIHandler;
+import de.bh.home.product.ui.base.AbstractComposite;
+import de.bh.home.product.ui.base.AbstractTreeComposite;
 
 public class CategoryComposite extends AbstractComposite
 {
 	private final UIHandler controller;
 	private final Color white;
 	private TabFolder tf;
-	private CustomTreeComposite treeSite;
-	private CustomTreeComposite treeCategory;
-
+	private WebSiteTreeComposite treeSite;
+	private AbstractTreeComposite treeCategory;
+	
 	public CategoryComposite(Composite parent, int style, UIHandler controller)
 	{
 		super(parent, style, controller);
@@ -44,14 +54,14 @@ public class CategoryComposite extends AbstractComposite
 		
 		tf.setBackground(white);
 		TabItem ti1 = new TabItem(tf, SWT.NONE);
-		treeSite = new CustomTreeComposite(tf, SWT.NONE, controller);
+		treeSite = new WebSiteTreeComposite(tf, SWT.NONE, controller);
 		ti1.setControl(treeSite);
 		ti1.setText(IConstants.TXT_WEBSITE);
-		treeSite.updateRootNode(IConstants.TXT_WEBSITE);
-		treeSite.updateChildrenNodes(controller.getSetting().getWebSites());
+		TreeItem root = treeSite.updateRootNode(new WebSiteElement(IConstants.TXT_WEBSITE));
+		treeSite.addChildrenNodes(root, controller.getWebSites());
 		
 		TabItem ti2 = new TabItem(tf, SWT.NONE);
-		treeCategory = new CustomTreeComposite(tf, SWT.NONE, controller);
+		treeCategory = new CategoryTreeComposite(tf, SWT.NONE, controller);
 		ti2.setControl(treeCategory);
 		ti2.setText(IConstants.TXT_CATEGORY);
 		
@@ -60,7 +70,26 @@ public class CategoryComposite extends AbstractComposite
 	@Override
 	public void receivedAction(int type, Object content)
 	{
-		
+		if( type == IActionConstants.ACTION_LOAD )
+		{
+			int index = tf.getSelectionIndex();
+			switch(index)
+			{
+				case 0:
+					List<AbstractTreeElement> ele = treeSite.getSelectedElement();
+					if( ele != null && !ele.isEmpty() )
+					{
+						getAllProducts(ele.get(0));
+					}
+					break;
+			}
+		}
 	}
-
+	
+	private void getAllProducts(AbstractTreeElement selectedElement)
+	{
+		String tableName = selectedElement.getName();
+		controller.loadProductFromDB(tableName);
+		MessageManager.INSTANCE.sendMessage(IEvents.EVENT_LOAD_DB_DATA, tableName);
+	}
 }

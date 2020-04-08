@@ -1,4 +1,4 @@
-package de.bh.home.product.ui;
+package de.bh.home.product.ui.base;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;

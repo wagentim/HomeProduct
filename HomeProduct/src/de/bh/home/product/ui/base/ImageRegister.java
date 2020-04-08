@@ -1,4 +1,4 @@
-package de.bh.home.product.ui;
+package de.bh.home.product.ui.base;
 
 import java.util.HashMap;
 import java.util.Iterator;

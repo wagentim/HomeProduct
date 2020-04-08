@@ -1,4 +1,4 @@
-package de.bh.home.product.ui;
+package de.bh.home.product.ui.base;
 
 import org.eclipse.swt.widgets.Composite;
 
